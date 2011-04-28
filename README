@@ -1,1 +1,10 @@
-Coming Soon™
+This is a SproutCore framework. To use, do:
+
+    cd frameworks
+    git clone https://github.com/erichocean/more_cowbell.git
+
+And then in your Buildfile, add:
+
+    config :yourapp, :required => [:more_cowbell]
+
+Enjoy!
