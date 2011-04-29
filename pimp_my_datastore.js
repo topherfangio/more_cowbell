@@ -3,6 +3,7 @@
 // Copyright: ©2011 Erich Atlas Ocean.
 // License:   Licensed under an MIT license (see license.js).
 // ==========================================================================
+/*global EO */
 
 (function () {
   if (!SC || !SC.Store || !SC.NestedStore) return ;
@@ -132,7 +133,7 @@ SC.Store.prototype.applyChangeset = function(changeset, namespace) {
 
 };
 
-SC.CHANGESET_SCHEMA = {
+EO.CHANGESET_SCHEMA = {
   "type": "object",
   "properties": {
     "sc_version": { "type": "number", "required": true },

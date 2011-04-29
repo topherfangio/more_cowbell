@@ -3,6 +3,7 @@
 // Copyright: ©2011 Erich Atlas Ocean.
 // License:   Licensed under an MIT license (see license.js).
 // ==========================================================================
+/*global EO */
 
 /** @static
   
