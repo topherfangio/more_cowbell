@@ -9,4 +9,4 @@
 
   More Cowbell is in the EO namespace.
 */
-EO = EO || {};
+window.EO = window.EO || {};
