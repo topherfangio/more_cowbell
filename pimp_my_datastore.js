@@ -108,21 +108,21 @@ SC.NestedStore.prototype.computeChangeset = function() {
 SC.Store.prototype.applyChangeset = function(changeset, namespace) {
   var store = this,
   recordTypes = changeset['sc_types'],
-  recordType, typeChanges, datahases;
+  recordType, typeChanges, datahashes;
 
   recordTypes.forEach(function(recordTypeName) {
     recordType = SC.objectForPropertyPath(namespace + '.' + recordTypeName);
     typeChanges = changeset[recordTypeName];
     if (!recordType) throw "Can't find object " + namespace + '.' + recordTypeName;
-    datahases = typeChanges['attributes'];
+    datahashes = typeChanges['attributes'];
 
     // loop over created and updated items and insert into store
     typeChanges['created'].forEach(function(id) {
-      store.pushRetrieve(recordType, id, datahases[id]);
+      store.pushRetrieve(recordType, id, datahashes[id]);
     });
     // TODO: merge what is already here, incase we are only given a diff
     typeChanges['updated'].forEach(function(id) {
-      store.pushRetrieve(recordType, id, datahases[id]);
+      store.pushRetrieve(recordType, id, datahashes[id]);
     });
     // Now Delete any records that have been deleted
     typeChanges['deleted'].forEach(function(id) {
