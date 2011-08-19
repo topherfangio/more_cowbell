@@ -106,9 +106,15 @@ SC.NestedStore.prototype.computeChangeset = function() {
 };
 
 SC.Store.prototype.applyChangeset = function(changeset, namespace) {
+
   var store = this,
   recordTypes = changeset['sc_types'],
   recordType, typeChanges, datahashes;
+
+  /*
+   * Make sure we fire changes only once
+   */
+  store.beginPropertyChanges();
 
   recordTypes.forEach(function(recordTypeName) {
     recordType = SC.objectForPropertyPath(namespace + '.' + recordTypeName);
@@ -118,18 +124,47 @@ SC.Store.prototype.applyChangeset = function(changeset, namespace) {
 
     // loop over created and updated items and insert into store
     typeChanges['created'].forEach(function(id) {
+      var storeKey = store.storeKeyExists(recordType, id);
+
+      if (storeKey) {
+        var status = store.peekStatus(storeKey);
+
+        if (status === SC.Record.BUSY_LOADING) {
+          store.dataSourceDidComplete(store.storeKeyFor(recordType, id), datahashes[id]);
+          return;
+        }
+      }
+
       store.pushRetrieve(recordType, id, datahashes[id]);
     });
+
     // TODO: merge what is already here, incase we are only given a diff
     typeChanges['updated'].forEach(function(id) {
+      var storeKey = store.storeKeyExists(recordType, id);
+
+      if (storeKey) {
+        var status = store.peekStatus(storeKey);
+
+        if (status === SC.Record.BUSY_LOADING) {
+          store.dataSourceDidComplete(store.storeKeyFor(recordType, id), datahashes[id]);
+          return;
+        }
+      }
+
       store.pushRetrieve(recordType, id, datahashes[id]);
     });
+
     // Now Delete any records that have been deleted
     typeChanges['deleted'].forEach(function(id) {
       store.pushDestroy(recordType, id);
     });
 
   });
+
+  /*
+   * Make sure we fire changes only once
+   */
+  store.endPropertyChanges();
 
 };
 
