@@ -129,7 +129,7 @@ SC.Store.prototype.applyChangeset = function(changeset, namespace) {
       if (storeKey) {
         var status = store.peekStatus(storeKey);
 
-        if (status === SC.Record.BUSY_LOADING) {
+        if (status & SC.Record.BUSY) {
           store.dataSourceDidComplete(store.storeKeyFor(recordType, id), datahashes[id]);
           return;
         }
@@ -145,7 +145,7 @@ SC.Store.prototype.applyChangeset = function(changeset, namespace) {
       if (storeKey) {
         var status = store.peekStatus(storeKey);
 
-        if (status === SC.Record.BUSY_LOADING) {
+        if (status & SC.Record.BUSY) {
           store.dataSourceDidComplete(storeKey, datahashes[id]);
           return;
         }
