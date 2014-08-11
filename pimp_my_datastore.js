@@ -146,7 +146,7 @@ SC.Store.prototype.applyChangeset = function(changeset, namespace) {
         var status = store.peekStatus(storeKey);
 
         if (status === SC.Record.BUSY_LOADING) {
-          store.dataSourceDidComplete(store.storeKeyFor(recordType, id), datahashes[id]);
+          store.dataSourceDidComplete(storeKey, datahashes[id]);
           return;
         }
       }
@@ -156,7 +156,20 @@ SC.Store.prototype.applyChangeset = function(changeset, namespace) {
 
     // Now Delete any records that have been deleted
     typeChanges['deleted'].forEach(function(id) {
-      store.pushDestroy(recordType, id);
+      var storeKey = store.storeKeyExists(recordType, id);
+
+      if (storeKey) {
+        var status = store.peekStatus(storeKey);
+
+        if (status === SC.Record.BUSY_LOADING) {
+          store.dataSourceDidComplete(storeKey, datahashes[id]);
+          return;
+        }
+      }
+
+      store.invokeLast(function() {
+        store.pushDestroy(store.recordTypeFor(storeKey), id);
+      });
     });
 
   });
