@@ -165,11 +165,11 @@ SC.Store.prototype.applyChangeset = function(changeset, namespace) {
           store.dataSourceDidComplete(storeKey, datahashes[id]);
           return;
         }
-      }
 
-      store.invokeLast(function() {
-        store.pushDestroy(store.recordTypeFor(storeKey), id);
-      });
+        store.invokeLast(function() {
+          store.pushDestroy(store.recordTypeFor(storeKey), id);
+        });
+      }
     });
 
   });
